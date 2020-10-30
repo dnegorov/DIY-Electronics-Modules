@@ -1,0 +1,82 @@
+1.Description:
+  It is a nRF24L01 wireless transceiver module.The green status indicator on the module is always on.When the serial port is sending and receiving data and the wireless end is sending and receiving data,the LED light flashes.After the communication is completed,the LED is always on.It means that the power supply and startup of the equipment are normal,and the equipment is working normally.
+
+2.Feature:
+  1>.Shorten the research and development cycle,and it is convenient to quickly verify and test the wireless communication system designed by yourself.
+  2>.Using RFX2401C radio frequency front-end amplifier chip,can amplify wireless signals to a maximum of 22dBm,effectively increasing the distance of signal communication.
+  3>.Transparent data transmission,support AT command setting.
+  4>.Sensitive transceiver,high power,long transmission distance,and can penetrate walls.
+  5>.Data transparent transmission
+  6>.Built-in RF power amplifier
+  7>.Built-in ceramic antenna
+  8>.UART communication
+
+3.Description:
+  1>.Product Name:nRF24L01 Wireless Transceiver Module
+  2>.Serial Frame Data Length:1~128 bytes (maximum 128 bytes)
+  3>.Minimum Data Frame Interval Duration:10ms(data frame interval must be greater than 10ms)
+  4>.Communication Interface:TTL
+  5>.Serial Port Baud Rate:115200bps
+  6>.Wireless Communication Channel:2.400GHz
+  7>.Wireless Communication Rate:2Mbps
+  8>.Wireless Communication Check method:16-bit CRC
+  9>.Local Address:0x11,0x22,0x33,0x44,0x55
+  10>.Target Machine Address:0x11,0x22,0x33,0x44,0x55
+  11>.Work Temperature:-25℃~85℃
+  12>.Work Humidity:5%~95%RH
+  13>.Product Size:50*15*5mm
+  14>.Antenna Size:46*18*7mm
+
+4.Detailed Explanation of Communication Format and Commands:
+  1>.All commands are in uppercase,and the punctuation must be half-width punctuation in English,no spaces!
+  2>.Unchangeable parameters:address length must be 5 bits,data length must be 32 bytes,transmission power is 0dbm (the actual transmission power is related to the RF front-end chip,the maximum power of the RF front-end can reach 22dBm).
+
+5.Transmission Effective Bytes:
+  1>.nRF24L01 wireless serial port module has a single transmission effective byte number of 1-128 bytes,and the interval between data frames needs to be greater than 10mS.(It is the data byte time,the receiving time interval is greater than 10mS,it is regarded as the end of a frame of data)
+  2>.The actual number of bytes sent by nRF24L01 is 32,the bytes available to users are 1-31,and the 0th byte is reserved by the system for statistics on the packet length of each transmission:for example,the serial port sends "abcd" (ASCII code,4 bytes),4abcd in actual transmission (the 0th byte is 4),and the receiving end should judge the length of the received data packet according to the number in the 0th byte during actual processing.
+
+6.Serial Communication Baud Rate:
+  1>.Optional baud rate:4800,9600,14400,19200,38400,57600,115200.Cover common baud rates,(the factory default baud rate is 115200)
+  2>.Baud rate modification command:send ASCII code [AT+BAUD=n] (n is 1,2,3,4,5,6,7 respectively corresponding to 4800,9600,14400,19200,38400,57600,115200 baud rate)
+For example,if the baud rate is changed to 115200,the serial debugging assistant will send the ASCII code [AT+BAUD=7],and the system will reply:the communication baud rate is set successfully.
+  3>.At this time,the baud rate is 115200,and the serial debugging assistant needs to switch to 115200 to communicate with the module.Note:The command letters must be all uppercase!
+
+7.Wireless Communication Transmission Rate:
+  1>.Optional rate:250Kbps,1Mbps,2Mbps (factory default 2Mbps)
+  2>.Transmission rate setting command:send ASCII code [AT+RATE=n] (n is 1,2,3 respectively corresponding to 250Kbps,1Mbps,2Mbps transmission rate)
+  3>.For example:modify the transmission rate to 250Kbps,the serial debugging assistant will send ASCII code [AT+RATE=1]
+
+8.Wireless Communication Address Setting:
+  1>.nRF24L01 wireless module 5-bit address (fixed length),target address and local receiving address 0 (the factory default is 0x11 0x22 0x33 0k44 0x55)
+  2>.Address setting command:
+    1.1>.Set the local receiving address 0:Send ASCI code [AT+RXA=0x??,0x??,0x??,0x??,0x??]
+(0x?? is the address to be set "," comma,must be an English half-width comma)
+    1.2>.For example:modify the address to 0xAA,0xBB,0xCC,0xDD,0xEE,then the serial debugging assistant will send ASCII code [AT+RXA=0xAA,0xB,0xCC,0xDD,0xEE]
+  3>.Set the target board address:
+    1.1>.Send ASCI code [AT+TXA=0x??,0x??,0x??,0x??,0x??] (0x?? is the address to be set"," comma:must be an English half-width comma)
+    1.2>.For example:modify the address to 0x11,0x22,0x33,0x44,0x55,then the serial debugging assistant will send ASCI code [AT+ TXA=0x11,0x22,0x33,0x44,0x55]
+
+9.Wireless Communication Channel Setting:
+  1>.Range:2.400GHz~2.525GHz (factory default 2.400GHz)
+  2>.Communication frequency setting command,send ASCII code [AT+FREQ=2.xxxG],2.xx is the frequency to be set,the range is 2.400GHz~2.525GHz,the range is invalid,the decimal point is three digits,less than three digits Need to add zero,the capital letter "G" after the command is indispensable.
+  3>.For example:modify the communication frequency to 2.424Ghz,then the serial debugging assistant will send ASCII code,[AT+FREQ=2.424G]
+
+10.Wireless CRC Check Setting:
+  1>.8-bit or 16-bit CRC check (factory default 16-bit CRC check mode)
+  2>.CRC check setting command:[AT+CRC=n] (n equals 8 or 16) such as:set the check mode to 8-bit CRC check,the serial debugging assistant will send ASCII code:[AT+CRC=8]
+
+11.System Initialization Command:
+  1>.When the customer's application settings are disordered and can't remember all the parameters set before,you can use this command to restore to the factory settings:the serial port baud rate is also not remembered,you can try to change the baud rate to send the following command.
+  2>.System initialization setting command:[AT+init]
+
+12.Query Firmware Version:
+  1>.Each device has a firmware version number at the factory.If the manufacturer upgrades the firmware,the manufacturer will update this firmware version number.
+  2>.Query firmware version command:[AT+VER]
+
+13.Note:
+  1>.The parameters that have been set take effect immediately after they are set.The system is powered on again,and the parameters will not be lost.After the system parameters are set,they will be automatically stored in the communication module to prevent the customer from setting the parameters next time after each setting is completed.
+
+14.Package:
+  1>.1pc nRF24L01 Wireless Transceiver Module
+  2>.1pc Antenna
+  3>.1pc 1*4P Male Pin
